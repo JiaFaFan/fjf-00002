@@ -4,6 +4,7 @@ import { SliderPanel } from './components/SliderPanel';
 import { PreviewArea } from './components/PreviewArea';
 import { Histogram } from './components/Histogram';
 import { CurveTool } from './components/CurveTool';
+import { FilterPresets } from './components/FilterPresets';
 import { useEditorStore } from './store/useEditorStore';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 import type { HistogramData } from './types';
@@ -33,7 +34,8 @@ function App() {
       <div className="flex-1 flex overflow-hidden">
         <SliderPanel />
         <PreviewArea onHistogramUpdate={handleHistogramUpdate} />
-        <div className="w-[320px] bg-zinc-900/60 backdrop-blur-xl border-l border-zinc-800 flex flex-col h-full">
+        <div className="w-[340px] bg-zinc-900/60 backdrop-blur-xl border-l border-zinc-800 flex flex-col h-full overflow-hidden">
+          <FilterPresets />
           <Histogram data={histogramData} />
           <CurveTool />
         </div>

@@ -44,18 +44,24 @@ export const buildMasterLUT = (
 };
 
 export const applyAdjustments = (
-  imageData: ImageData,
+  originalImageData: ImageData,
   lut: { r: Uint8ClampedArray; g: Uint8ClampedArray; b: Uint8ClampedArray },
-  params: AdjustmentParams
+  params: AdjustmentParams,
+  filterIntensity: number = 100
 ): ImageData => {
-  const data = new Uint8ClampedArray(imageData.data);
+  const data = new Uint8ClampedArray(originalImageData.data);
   const saturationFactor = 1 + params.saturation / 100;
   const vibranceAmount = params.vibrance / 100;
+  const intensity = clamp(filterIntensity, 0, 100) / 100;
 
   for (let i = 0; i < data.length; i += 4) {
-    let r = lut.r[data[i]];
-    let g = lut.g[data[i + 1]];
-    let b = lut.b[data[i + 2]];
+    const origR = originalImageData.data[i];
+    const origG = originalImageData.data[i + 1];
+    const origB = originalImageData.data[i + 2];
+
+    let r = lut.r[origR];
+    let g = lut.g[origG];
+    let b = lut.b[origB];
 
     if (params.saturation !== 0) {
       const [h, s, l] = rgbToHsl(r, g, b);
@@ -73,12 +79,18 @@ export const applyAdjustments = (
       [r, g, b] = hslToRgb(h, newS, l);
     }
 
+    if (intensity < 1) {
+      r = Math.round(origR + (r - origR) * intensity);
+      g = Math.round(origG + (g - origG) * intensity);
+      b = Math.round(origB + (b - origB) * intensity);
+    }
+
     data[i] = r;
     data[i + 1] = g;
     data[i + 2] = b;
   }
 
-  return new ImageData(data, imageData.width, imageData.height);
+  return new ImageData(data, originalImageData.width, originalImageData.height);
 };
 
 export const calculateHistogram = (imageData: ImageData): HistogramData => {

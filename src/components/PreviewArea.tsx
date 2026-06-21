@@ -20,6 +20,7 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ onHistogramUpdate }) =
   const curves = useEditorStore((state) => state.curves);
   const showOriginal = useEditorStore((state) => state.showOriginal);
   const isDragging = useEditorStore((state) => state.isDragging);
+  const filterIntensity = useEditorStore((state) => state.filterIntensity);
   const fileInfo = useEditorStore((state) => state.fileInfo);
   const setImage = useEditorStore((state) => state.setImage);
   const pushHistory = useEditorStore((state) => state.pushHistory);
@@ -30,6 +31,7 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ onHistogramUpdate }) =
     curves,
     showOriginal,
     isDragging,
+    filterIntensity,
     onHistogramUpdate,
   });
 

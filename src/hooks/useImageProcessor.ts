@@ -9,6 +9,7 @@ interface UseImageProcessorOptions {
   curves: CurvePoints;
   showOriginal: boolean;
   isDragging: boolean;
+  filterIntensity: number;
   onHistogramUpdate?: (data: HistogramData) => void;
   onImageRender?: (imageData: ImageData) => void;
 }
@@ -19,6 +20,7 @@ export const useImageProcessor = ({
   curves,
   showOriginal,
   isDragging,
+  filterIntensity,
   onHistogramUpdate,
   onImageRender,
 }: UseImageProcessorOptions) => {
@@ -63,7 +65,8 @@ export const useImageProcessor = ({
     const processedData = applyAdjustments(
       originalImageData,
       lutCacheRef.current.lut!,
-      params
+      params,
+      filterIntensity
     );
 
     canvas.width = originalImageData.width;
@@ -77,7 +80,7 @@ export const useImageProcessor = ({
     if (onImageRender) {
       onImageRender(processedData);
     }
-  }, [originalImageData, params, curves, showOriginal, onHistogramUpdate, onImageRender]);
+  }, [originalImageData, params, curves, showOriginal, filterIntensity, onHistogramUpdate, onImageRender]);
 
   useEffect(() => {
     if (!originalImageData) return;
@@ -96,7 +99,7 @@ export const useImageProcessor = ({
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [originalImageData, params, curves, showOriginal, isDragging, renderFrame]);
+  }, [originalImageData, params, curves, showOriginal, isDragging, filterIntensity, renderFrame]);
 
   const getOutputCanvas = useCallback(() => outputCanvasRef.current, []);
 
